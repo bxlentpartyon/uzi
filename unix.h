@@ -2,6 +2,8 @@
 UZI (Unix Z80 Implementation) Kernel:  unix.h
 ***************************************************/
 
+#ifndef __UNIX_H__
+#define __UNIX_H__
 
 #ifndef vax
 #define CPM
@@ -98,7 +100,7 @@ typedef struct blkbuf {
     char        bf_dirty;
     char        bf_busy;
     uint16      bf_time;        /* LRU time stamp */
-/*    struct blkbuf *bf_next;    /* LRU free list pointer */
+/*    struct blkbuf *bf_next;     LRU free list pointer */
 } blkbuf, *bufptr;
 
 
@@ -254,6 +256,7 @@ typedef struct p_tab {
 
 /* Per-process data (Swapped with process) */
 
+#if 0
 #asm 8080
 ?OSYS equ 2     ;byte offsets of elements of u_data
 ?OCALL equ 3
@@ -263,6 +266,7 @@ typedef struct p_tab {
 ?OSP equ 10     ;users stack pointer
 ?OBC equ 12     ;users frame pointer
 #endasm
+#endif
 
 typedef struct u_data {
     struct p_tab *u_ptab;       /* Process table pointer */
@@ -375,3 +379,4 @@ typedef struct devsw {
 
 #include "config.h"
 
+#endif /* __UNIX_H__ */

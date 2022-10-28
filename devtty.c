@@ -4,11 +4,16 @@ UZI (Unix Z80 Implementation) Kernel:  devtty.c
 
 
 #include "unix.h"
+#include "machdep.h"
+#include "devio.h"
+#include "process.h"
+
 extern struct u_data udata;
 
 #define TTYSIZ 132
 
 char ttyinbuf[TTYSIZ];
+void _putc(char c);
 
 struct s_queue ttyinq = {
     ttyinbuf,
@@ -22,9 +27,7 @@ struct s_queue ttyinq = {
 int stopflag;   /* Flag for ^S/^Q */
 int flshflag;   /* Flag for ^O */
 
-tty_read(minor, rawflag)
-int16 minor;
-int16 rawflag;
+int tty_read(int16 minor, int16 rawflag)
 {
     int nread;
 
@@ -36,7 +39,7 @@ int16 rawflag;
             di();
             if (remq(&ttyinq,udata.u_base))
                 break;
-            psleep(&ttyinq);
+            psleep((void *) &ttyinq);
             if (udata.u_cursig || udata.u_ptab->p_pending)  /* messy */
             {
                 udata.u_error = EINTR;
@@ -194,8 +197,7 @@ char c;
 
 #else
 
-_putc(c)
-char c;
+void _putc(char c)
 {
     while(!(in(0x72)&02))
         ;
