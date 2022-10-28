@@ -10,7 +10,7 @@ UZI (Unix Z80 Implementation) Kernel:  machdep.c
 /* This is called at the very beginning to initialize everything. */
 /* It is the equivalent of main() */
 
-fs_init()
+void main()
 {
     di();
     stkreset();
