@@ -180,8 +180,8 @@ _execve()
     }
 
     ifnot ( (getperm(ino) & OTH_EX) &&
-	    (ino->c_node.i_mode & F_REG) &&
-	    (ino->c_node.i_mode & (OWN_EX | OTH_EX | GRP_EX)) )
+	    (ino->c_node.i_mode_hi & F_REG) &&
+	    (ino->c_node.i_mode_lo & (OWN_EX | OTH_EX | GRP_EX)) )
     {
 	udata.u_error = EACCES;
 	goto nogood;
@@ -205,10 +205,10 @@ _execve()
 
     /* Here, check the setuid stuff. No other changes need be made in
     the user data */
-    if (ino->c_node.i_mode & SET_UID)
+    if (ino->c_node.i_mode_lo & SET_UID)
 	udata.u_euid = ino->c_node.i_uid;
 
-    if (ino->c_node.i_mode & SET_GID)
+    if (ino->c_node.i_mode_lo & SET_GID)
 	udata.u_egid = ino->c_node.i_gid;
 
     bcopy(buf,PROGBASE,512);

@@ -340,9 +340,10 @@ idump()
 
     for (ip=i_tab; ip < i_tab+ITABSIZE; ++ip)
     {
-        kprintf("%d\t%d\t%d\t%u\t0%o\t%d\t%d\t%d\t%d\n",
-               ip-i_tab, ip->c_magic,ip->c_dev, ip->c_num,
-               ip->c_node.i_mode,ip->c_node.i_nlink,ip->c_node.i_addr[0],
+        kprintf("%d\t%d\t%d\t%u\t0%o\t0%o\t%d\t%d\t%d\t%d\n",
+               ip-i_tab, ip->c_magic, ip->c_dev, ip->c_num,
+               ip->c_node.i_mode_lo, ip->c_node.i_mode_hi,
+	       ip->c_node.i_nlink, ip->c_node.i_addr[0],
                ip->c_refs,ip->c_dirty);
 /*****
         ifnot (ip->c_magic)     

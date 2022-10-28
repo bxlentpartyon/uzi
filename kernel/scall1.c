@@ -179,7 +179,8 @@ _creat()
 	if (parent && (ino = newfile(parent,name)))
 	         /* Parent was derefed in newfile */
 	{
-	    ino->c_node.i_mode = (F_REG | (mode & MODE_MASK & ~udata.u_mask));
+	    ino->c_node.i_mode_lo = mode & MODE_MASK & ~udata.u_mask;
+	    ino->c_node.i_mode_hi = F_REG;
 	    setftime(ino, A_TIME|M_TIME|C_TIME);
 	    /* The rest of the inode is initialized in newfile() */
 	    wr_inode(ino);
@@ -260,7 +261,8 @@ _pipe()
     of_tab[oft2].o_access = O_WRONLY;
 
     ++ino->c_refs;
-    ino->c_node.i_mode = F_PIPE | 0777; /* No permissions necessary on pipes */
+    ino->c_node.i_mode_lo = F_PIPE | 0777; /* No permissions necessary on pipes */
+    ino->c_node.i_mode_hi = 0;
     ino->c_node.i_nlink = 0;            /* a pipe is not in any directory */
 
     *fildes = u1;
@@ -890,7 +892,8 @@ _mknod()
 	goto nogood2;
 
     /* Initialize mode and dev */
-    ino->c_node.i_mode = mode & ~udata.u_mask;
+    ino->c_node.i_mode_lo = mode & ~udata.u_mask;
+    ino->c_node.i_mode_hi = 0;
     ino->c_node.i_addr[0] = isdevice(ino) ? dev : 0;
     setftime(ino, A_TIME|M_TIME|C_TIME);
     wr_inode(ino);
@@ -1030,7 +1033,8 @@ _chmod()
 	return(-1);
     }
 
-    ino->c_node.i_mode = (mode & MODE_MASK) | (ino->c_node.i_mode & F_MASK);
+    ino->c_node.i_mode_lo = mode & MODE_MASK;
+    ino->c_node.i_mode_hi = ino->c_node.i_mode_hi & F_MASK;
     setftime(ino, C_TIME);
     i_deref(ino);
     return(0);

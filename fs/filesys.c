@@ -242,12 +242,12 @@ register unsigned ino;
 found:
     if (new)
     {
-	if (nindex->c_node.i_nlink || nindex->c_node.i_mode & F_MASK)
+	if (nindex->c_node.i_nlink || nindex->c_node.i_mode_hi & F_MASK)
 	    goto badino;
     }
     else
     {
-	ifnot (nindex->c_node.i_nlink && nindex->c_node.i_mode & F_MASK)
+	ifnot (nindex->c_node.i_nlink && nindex->c_node.i_mode_hi & F_MASK)
 	    goto badino;
     }
 
@@ -399,7 +399,8 @@ register char *name;
     ifnot (nindex = i_open(pino->c_dev, 0))
 	goto nogood;
 
-    nindex->c_node.i_mode = F_REG;   /* For the time being */
+    nindex->c_node.i_mode_lo = 0;   /* For the time being */
+    nindex->c_node.i_mode_hi = F_REG;   /* For the time being */
     nindex->c_node.i_nlink = 1;
     nindex->c_node.i_size.o_offset = 0;
     nindex->c_node.i_size.o_blkno = 0;
@@ -489,7 +490,7 @@ tryagain:
 	buf = (struct dinode *)bread(devno, blk, 0);
 	for (j=0; j < 8; j++)
 	{
-	    ifnot (buf[j].i_mode || buf[j].i_nlink)
+	    ifnot (buf[j].i_mode_lo || buf[j].i_mode_hi || buf[j].i_nlink)
 	        dev->s_inode[k++] = 8*(blk-2) + j;
 	    if (k==50)
 	    {
@@ -715,7 +716,7 @@ void i_deref(register inoptr ino)
     ifnot (ino->c_refs)
 	panic("inode freed.");
 
-    if ((ino->c_node.i_mode & F_MASK) == F_PIPE)
+    if ((ino->c_node.i_mode_hi & F_MASK) == F_PIPE)
 	wakeup((char *)ino);
 
     /* If the inode has no links and no refs, it must have
@@ -729,7 +730,8 @@ void i_deref(register inoptr ino)
     {
 	ifnot (ino->c_node.i_nlink)
 	{
-	    ino->c_node.i_mode = 0;
+	    ino->c_node.i_mode_lo = 0;
+	    ino->c_node.i_mode_hi = 0;
 	    i_free(ino->c_dev, ino->c_num);
 	}
 	wr_inode(ino);
@@ -759,7 +761,7 @@ void wr_inode(register inoptr ino)
 /* isdevice(ino) returns true if ino points to a device */
 int isdevice(inoptr ino)
 {
-    return (ino->c_node.i_mode & 020000);
+    return (ino->c_node.i_mode_hi & F_CDEV);
 }
 
 
@@ -989,7 +991,7 @@ int getperm(inoptr ino)
     if (super())
 	return(07);
 
-    mode = ino->c_node.i_mode;
+    mode = ino->c_node.i_mode_lo;
     if (ino->c_node.i_uid == udata.u_euid)
 	mode >>= 6;
     else if (ino->c_node.i_gid == udata.u_egid)
@@ -1016,7 +1018,7 @@ void setftime(register inoptr ino, register int flag)
 
 int getmode(inoptr ino)
 {
-    return( ino->c_node.i_mode & F_MASK);
+    return ino->c_node.i_mode_hi & F_MASK;
 }
 
 
