@@ -299,8 +299,7 @@ Any device other than a disk will have only raw access.
 
 
 
-d_open(dev)
-int dev;
+int d_open(int dev)
 {
     ifnot (validdev(dev))
         return(-1);
@@ -308,8 +307,7 @@ int dev;
 }
 
 
-d_close(dev)
-int dev;
+void d_close(int dev)
 {
     ifnot (validdev(dev))
         panic("d_close: bad device");

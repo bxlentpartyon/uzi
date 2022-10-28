@@ -269,11 +269,7 @@ of NULLINODE means an inode # of 0.  A return status of 0 means there
 was no space left in the filesystem, or a non-empty oldname was not found,
 or the user did not have write permission. */
 
-ch_link(wd,oldname,newname,nindex)
-register inoptr wd;
-char *oldname;
-char *newname;
-inoptr nindex;
+int ch_link(register inoptr wd, char *oldname, char *newname, inoptr nindex)
 {
     struct direct curentry;
 
@@ -647,7 +643,7 @@ register blkno_t blk;
 /* Oft_alloc and oft_deref allocate and dereference (and possibly free)
 entries in the open file table. */
 
-oft_alloc()
+int oft_alloc(void)
 {
     register int j;
 
@@ -664,8 +660,7 @@ oft_alloc()
     return(-1);
 }
 
-oft_deref(of)
-register int of;
+void oft_deref(register int of)
 {
     register struct oft *ofptr;
 
@@ -682,7 +677,7 @@ register int of;
 
 /* Uf_alloc finds an unused slot in the user file table. */
 
-uf_alloc()
+int uf_alloc(void)
 {
     register int j;
 
@@ -713,8 +708,7 @@ inoptr ino;
 from the table if there are no more references to it.  If it also
 has no links, the inode itself and its blocks (if not a device) is freed. */
 
-i_deref(ino)
-register inoptr ino;
+void i_deref(register inoptr ino)
 {
     magic(ino);
 
@@ -746,8 +740,7 @@ register inoptr ino;
 /* Wr_inode writes out the given inode in the inode table out to disk,
 and resets its dirty bit. */
 
-wr_inode(ino)
-register inoptr ino;
+void wr_inode(register inoptr ino)
 {
     struct dinode *buf;
     register blkno_t blkno;
@@ -764,8 +757,7 @@ register inoptr ino;
 
 
 /* isdevice(ino) returns true if ino points to a device */
-isdevice(ino)
-inoptr ino;
+int isdevice(inoptr ino)
 {
     return (ino->c_node.i_mode & 020000);
 }
@@ -782,8 +774,7 @@ inoptr ino;
 /* F_trunc frees all the blocks associated with the file,
 if it is a disk file. */
 
-f_trunc(ino)
-register inoptr ino;
+void f_trunc(register inoptr ino)
 {
     int dev;
     int j;
@@ -983,7 +974,7 @@ register int uindex;
 }
 
 /* Super returns true if we are the superuser */
-super()
+int super(void)
 {
     return(udata.u_euid == 0);
 }
@@ -991,8 +982,7 @@ super()
 /* Getperm looks at the given inode and the effective user/group ids, and
 returns the effective permissions in the low-order 3 bits. */
 
-getperm(ino)
-inoptr ino;
+int getperm(inoptr ino)
 {
     int mode;
 
@@ -1011,9 +1001,7 @@ inoptr ino;
 
 /* This sets the times of the given inode, according to the flags */
 
-setftime(ino, flag)
-register inoptr ino;
-register int flag;
+void setftime(register inoptr ino, register int flag)
 {
     ino->c_dirty = 1;
 
@@ -1026,8 +1014,7 @@ register int flag;
 }
 
 
-getmode(ino)
-inoptr ino;
+int getmode(inoptr ino)
 {
     return( ino->c_node.i_mode & F_MASK);
 }

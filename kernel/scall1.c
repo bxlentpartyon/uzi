@@ -4,9 +4,12 @@ UZI (Unix Z80 Implementation) Kernel:  scall1.c
 
 
 /*LINTLIBRARY*/
-#include "unix.h"
-#include "extern.h"
+#include <unix.h>
+#include <extern.h>
 
+#include <filesys.h>
+#include <machdep.h>
+#include <scall.h>
 
 /*******************************************
 open(name, flag)
@@ -97,8 +100,7 @@ _close()
 #undef uindex
 
 
-doclose(uindex)
-int16 uindex;
+int doclose(int16 uindex)
 {
     register int16 oftindex;
     inoptr ino;
@@ -497,8 +499,7 @@ int rwflag;
 
 
 
-readi(ino)
-register inoptr ino;
+void readi(register inoptr ino)
 {
     register uint16 amount;
     register uint16 toread;
@@ -585,8 +586,7 @@ register inoptr ino;
 
 /* Writei (and readi) need more i/o error handling */
 
-writei(ino)
-register inoptr ino;
+void writei(register inoptr ino)
 {
     register uint16 amount;
     register uint16 towrite;
@@ -689,8 +689,7 @@ register inoptr ino;
 }
 
 
-min(a, b)
-int a, b;
+int min(int a, int b)
 {
     return ( a < b ? a : b);
 }
@@ -731,7 +730,7 @@ int amount;
 }
 
 
-updoff()
+void updoff(void)
 {
     register off_t *offp;
 

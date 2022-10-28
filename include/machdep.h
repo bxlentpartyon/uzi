@@ -4,6 +4,7 @@
 void di(void);
 void ei(void);
 void idump(void);
+void warning(char *s);
 
 /* Not actually implemented yet */
 unsigned int in(unsigned int *addr);

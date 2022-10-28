@@ -303,8 +303,7 @@ char *s;
 }
 
 
-warning(s)
-char *s;
+void warning(char *s)
 {
     kprintf("WARNING: %s\n",s);
 }
