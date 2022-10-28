@@ -28,7 +28,7 @@ clean:
 
 %.o: %.c
 %.s: %.c
-	$(CC) --target $(PLATFORM) -I$(CC65_DIR)/include/ $<
+	$(CC) --target $(PLATFORM) -I$(CC65_DIR)/include/ -I$(PWD)/include/ $<
 
 %.o: %.s
 	$(CA) $<
