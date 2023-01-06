@@ -2,10 +2,17 @@
 UZI (Unix Z80 Implementation) Kernel:  machdep.c
 ***************************************************/
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdarg.h>
 
-#include "unix.h"
-#include "extern.h"
+#include <unix.h>
+#include <extern.h>
 
+#include <devio.h>
+#include <devtty.h>
+#include <machdep.h>
+#include <process.h>
 
 /* This is called at the very beginning to initialize everything. */
 /* It is the equivalent of main() */
@@ -27,9 +34,7 @@ void main()
 
 
 /* This checks to see if a user-suppled address is legitimate */
-valadr(base,size)
-char *base;
-uint16 size;
+int valadr(char *base, uint16 size)
 {
     if (base < PROGBASE || base+size >= (char *)&udata)
     {
@@ -44,8 +49,7 @@ uint16 size;
 The t_time field holds up to one second of ticks,
 while the t_date field counts minutes */
 
-addtick(t1,t2)
-time_t *t1, *t2;
+void addtick(time_t *t1, time_t *t2)
 {
 
     t1->t_time += t2->t_time;
@@ -57,8 +61,7 @@ time_t *t1, *t2;
     }
 }
 
-incrtick(t)
-time_t *t;
+void incrtick(time_t *t)
 {
     if (++t->t_time == 60*TICKSPERSEC)
     {
@@ -68,29 +71,34 @@ time_t *t;
 }
 
 
-stkreset()
+void stkreset(void)
 {
+/*
 #asm 8080
         POP     H
         LXI     SP,udata?-2
         PCHL
 #endasm
+*/
 }
 
 
-tempstack()
+void tempstack(void)
 {
+/*
 #asm 8080
         POP     H
         LXI     SP,100H
         PCHL
 #endasm
+*/
 }
 
 
 
-initvec()
+void initvec(void)
 {
+/*
 #asm 8080
         LXI     H,vector?
         INX     H
@@ -109,13 +117,15 @@ initvec()
         MOV     M,D     ;STORE ADDRESS OF SERVICE ROUTINE IN vector[].
         RET
 #endasm
+*/
 }
 
 extern int unix();
 
 
-doexec()
+void doexec(void *new_stack)
 {
+/*
 #asm 8080
         POP     H
         POP     H       ;get argument
@@ -128,6 +138,7 @@ doexec()
         STA     udata? + ?OSYS
         JMP     0100H
 #endasm
+*/
 }
 
 
@@ -139,8 +150,7 @@ that could have interrupted. */
 
 service()
 {
-
-    ;
+/*
 #asm 8080
         PUSH    PSW
         PUSH    B
@@ -151,6 +161,7 @@ service()
         PUSH    IY
 .8080
 #endasm
+*/
 
     inint = 1;
 
@@ -170,6 +181,7 @@ found:
         calltrap();
     ;
 
+/*
 #asm 8080
 .Z80
         POP     IY
@@ -182,12 +194,12 @@ found:
         EI
         RET
 #endasm
-
+*/
 }
 
 
 
-calltrap()
+void calltrap(void)
 {
     /* Deal with a pending caught signal, if any. */
         /* udata.u_insys should be false, and interrupts enabled.
@@ -222,8 +234,7 @@ sttime()
 }
 
 
-rdtime(tloc)
-time_t *tloc;
+void rdtime(time_t *tloc)
 {
     di();
     tloc->t_time = tod.t_time;
@@ -233,7 +244,7 @@ time_t *tloc;
 
 
 /* Update global time of day */
-rdtod()
+void rdtod(void)
 {
     tod.t_time = (tread(SECS)>>1) | (tread(MINS)<<5) | (tread(HRS)<<11);
     tod.t_date = tread(DAY) | (tread(MON)<<5) | (YEAR<<9);
@@ -241,8 +252,7 @@ rdtod()
 
 
 /* Read BCD clock register, convert to binary. */
-tread(port)
-uint16 port;
+uint16 tread(uint16 port)
 {
     int n;
 
@@ -252,23 +262,27 @@ uint16 port;
 
 
 /* Disable interrupts */
-di()
+void di(void)
 {
+/*
 #asm 8080
         DI      ;disable interrupts
 #endasm
+*/
 }
 
 /* Enable interrupts if we are not in service routine */
-ei()
+void ei(void)
 {
     if (inint)
         return;
     ;   /* Empty statement necessary to fool compiler */
 
+/*
 #asm 8080
         EI      ;disable interrupts
 #endasm
+*/
 }
 
 
@@ -277,6 +291,7 @@ ei()
 
 shift8()
 {
+/*
 #asm 8080
         POP     D       ;ret addr
         POP     H
@@ -287,13 +302,13 @@ shift8()
         PUSH    H
         PUSH    D       ;restore stack
 #endasm
+*/
 }
 
 
 /* This prints an error message and dies. */
 
-panic(s)
-char *s;
+void panic(char *s)
 {
     di();
     inint = 1;
@@ -316,8 +331,7 @@ char *s;
         kputchar(*(s++));
 }
 
-kputchar(c)
-int c;
+void kputchar(int c)
 {
     if (c == '\n')
         _putc('\r');
@@ -328,7 +342,7 @@ int c;
 
 
 
-idump()
+void idump(void)
 {
     inoptr ip;
     ptptr pp;
@@ -372,14 +386,21 @@ idump()
 
 
 /* Short version of printf to save space */
-kprintf(nargs)
+/* TODO: fix the vararg handling here */
+void kprintf(char *fmt, ...)
         {
-        register char **arg, *fmt;
+	va_list ap;
+        register char **arg;
         register c, base;
         char s[7], *itob();
 
+
+	va_start(ap, fmt);
+
+	/* wrong - just comment it out for now.
         arg = (char **)&nargs + nargs;
         fmt = *arg;
+	*/
         while (c = *fmt++) {
                 if (c != '%') {
                         kputchar(c);
@@ -411,5 +432,7 @@ kprintf(nargs)
                         continue;
                         }
                 }
+
+	va_end(ap);
         }
 

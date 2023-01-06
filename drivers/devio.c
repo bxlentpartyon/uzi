@@ -81,23 +81,19 @@ done:
 
 
 
-brelse(bp)
-bufptr bp;
+void brelse(bufptr bp)
 {
     bfree(bp, 0);
 }
 
-bawrite(bp)
-bufptr bp;
+void bawrite(bufptr bp)
 {
     bfree(bp, 1);
 }
 
 
 
-bfree(bp, dirty)
-register bufptr bp;
-int dirty;
+int bfree(register bufptr bp, int dirty)
 {
 
     bp->bf_dirty |= dirty;
@@ -127,7 +123,7 @@ zerobuf()
 }
 
 
-bufsync()
+void bufsync(void)
 {
     register bufptr bp;
 
@@ -190,7 +186,7 @@ freebuf()
 }
         
 
-bufinit()
+void bufinit(void)
 {
     register bufptr bp;
 
@@ -201,7 +197,7 @@ bufinit()
 }
 
 
-bufdump()
+void bufdump(void)
 {
     register bufptr j;
 
@@ -243,16 +239,14 @@ bufptr bp;
     return ((*dev_tab[bp->bf_dev].dev_write)(dev_tab[bp->bf_dev].minor, 0));
 }
 
-cdread(dev)
-int dev;
+int cdread(int dev)
 {
     ifnot (validdev(dev))
         panic("cdread: invalid dev");
     return ((*dev_tab[dev].dev_read)(dev_tab[dev].minor, 1));
 }
 
-cdwrite(dev)
-int dev;
+int cdwrite(int dev)
 {
     ifnot (validdev(dev))
         panic("cdwrite: invalid dev");
@@ -260,11 +254,7 @@ int dev;
 }
 
 
-swapread(dev, blkno, nbytes, buf)
-int dev;
-blkno_t blkno;
-unsigned nbytes;
-char *buf;
+void swapread(int dev, blkno_t blkno, unsigned nbytes, char *buf)
 {
     swapbase = buf;
     swapcnt = nbytes;
@@ -273,11 +263,7 @@ char *buf;
 }
 
 
-swapwrite(dev, blkno, nbytes, buf)
-int dev;
-blkno_t blkno;
-unsigned nbytes;
-char *buf;
+void swapwrite(int dev, blkno_t blkno, unsigned nbytes, char *buf)
 {
     swapbase = buf;
     swapcnt = nbytes;
@@ -316,10 +302,7 @@ void d_close(int dev)
 
 
 
-d_ioctl(dev,request,data)
-int dev;
-int request;
-char *data;
+int d_ioctl(int dev, int request, char *data)
 {
     ifnot (validdev(dev))
     {
@@ -349,7 +332,7 @@ nogood()
 }
 
 
-validdev(dev)
+int validdev(int dev)
 {
     return(dev >= 0 && dev < (sizeof(dev_tab)/sizeof(struct devsw)));
 }

@@ -7,8 +7,11 @@ UZI (Unix Z80 Implementation) Kernel:  scall1.c
 #include <unix.h>
 #include <extern.h>
 
+#include <devio.h>
+#include <extras.h>
 #include <filesys.h>
 #include <machdep.h>
+#include <process.h>
 #include <scall.h>
 
 /*******************************************
@@ -697,17 +700,14 @@ int min(int a, int b)
 }
 
 
-psize(ino)
-inoptr ino;
+int psize(inoptr ino)
 {
     return (512*ino->c_node.i_size.o_blkno+ino->c_node.i_size.o_offset);
 }
 
 
 
-addoff(ofptr, amount)
-off_t *ofptr;
-int amount;
+void addoff(off_t *ofptr, int amount)
 {
     if (amount >= 0)
     {
@@ -1143,9 +1143,7 @@ _fstat()
 
 
 /* Utility for stat and fstat */
-stcpy(ino, buf)
-inoptr ino;
-char *buf;
+void stcpy(inoptr ino, char *buf)
 {
     /* violently system-dependent */
     bcopy((char *)&(ino->c_dev), buf, 12);

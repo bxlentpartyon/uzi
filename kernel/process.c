@@ -3,10 +3,17 @@ UZI (Unix Z80 Implementation) Kernel:  process.c
 ***************************************************/
 
 
-#include "unix.h"
-#include "extern.h"
+#include <unix.h>
+#include <extern.h>
 
-init2()
+#include <devio.h>
+#include <extras.h>
+#include <filesys.h>
+#include <machdep.h>
+#include <process.h>
+#include <scall.h>
+
+void init2(void)
 {
     register char *j;
     static char bootchar;
@@ -71,8 +78,7 @@ Normally when psleep is called, the interrupts have already been
 disabled.   An event of 0 means a pause(), while an event equal
 to the process's own ptab address is a wait().   */
 
-psleep(event)
-char *event;
+void psleep(void *event)
 {
     register dummy;  /* Force saving of registers */
 
@@ -99,8 +105,7 @@ char *event;
 /* wakeup() looks for any process waiting on the event,
 and make them runnable */
 
-wakeup(event)
-char *event;
+void wakeup(char *event)
 {
     register ptptr p;
 
@@ -122,8 +127,7 @@ It is actually the scheduler.
 If there are none, it loops.  This is the only time-wasting loop in the
 system. */
 
-ptptr
-getproc()
+ptptr getproc(void)
 {
     register status;
     static ptptr pp = ptab;    /* Pointer for round-robin scheduling */
@@ -154,7 +158,7 @@ When a process is restarted after calling swapout,
 it thinks it has just returned from swapout(). */
 
 /* This function can have no arguments or auto variables */
-swapout()
+int swapout(void)
 {
     static ptptr newp;
     ptptr getproc();
@@ -175,6 +179,7 @@ swapout()
 
     ;
     /* Save the stack pointer and critical registers */
+/*
 #asm
 	LD      HL,01   ;this will return 1 if swapped.
 	PUSH    HL      ;will be return value
@@ -184,6 +189,7 @@ swapout()
 	ADD     HL,SP   ;get sp into hl
 	LD      (stkptr?),HL
 #endasm
+*/
     udata.u_sp = stkptr;
 
     swrite();
@@ -196,7 +202,7 @@ swapout()
 
 
 /* This actually writes out the image */
-swrite()
+void swrite(void)
 {
     blkno_t blk;
     blk = udata.u_ptab->p_swap;
@@ -219,8 +225,7 @@ swrite()
 }
 
 /* No automatics can be used past tempstack(); */
-swapin(pp)
-ptptr pp;
+void swapin(ptptr pp)
 {
     static blkno_t blk;
     static ptptr newp;
@@ -253,6 +258,7 @@ ptptr pp;
     /* Restore the registers */
 
     stkptr = udata.u_sp;
+/*
 #asm
 	LD      HL,(stkptr?)
 	LD      SP,HL
@@ -263,6 +269,7 @@ ptptr pp;
 	OR      L
 	RET             ;return into the context of the swapped-in process
 #endasm
+*/
 
 }
 
@@ -273,7 +280,7 @@ int16 newid;
 /* dofork implements forking.  */
 /* This function can have no arguments or auto variables */
 
-dofork()
+int dofork(void)
 {
     static ptptr p;
     ptptr ptab_alloc();
@@ -292,6 +299,7 @@ dofork()
     /* When the process is swapped back in, it will be as if
     it returns with the value of the childs pid. */
 
+/*
 #asm
 	LD      HL,(newid?)
 	PUSH    HL
@@ -301,15 +309,18 @@ dofork()
 	ADD     HL,SP   ;get sp into hl
 	LD      (stkptr?),HL
 #endasm
+*/
 
     udata.u_sp = stkptr;
     swrite();
 
+/*
 #asm
 	POP     HL              ;repair stack pointer
 	POP     HL
 	POP     HL
 #endasm
+*/
 
     /* Make a new process table entry, etc. */
     newproc(p);
@@ -324,8 +335,7 @@ dofork()
 
 /* Newproc fixes up the tables for the child of a fork */
 
-newproc(p)
-ptptr p;    /* New process table entry */
+void newproc(ptptr p)
 {
     register char *j;
 
@@ -399,7 +409,7 @@ and is in user space or mark it to be swapped out if in system space.
 Also it decrements the alarm clock of processes.
 This must have no automatic or register variables */
 
-clk_int()
+int clk_int(void)
 {
     static ptptr p;
 
@@ -499,6 +509,8 @@ int callno;
     if (udata.u_error)
     {
 	;
+
+/*
 #asm
 	LD      HL, (udata? + ?OERR)
 	POP     BC              ;restore frame pointer
@@ -507,6 +519,7 @@ int callno;
 	SCF
 	RET
 #endasm
+*/
 	;
     }
 
@@ -516,7 +529,7 @@ int callno;
 
 
 /* This sees if the current process has any signals set, and deals with them */
-chksigs()
+void chksigs(void)
 {
     register j;
 
@@ -548,9 +561,7 @@ chksigs()
 }
 
 
-sendsig(proc,sig)
-ptptr proc;
-int16 sig;
+void sendsig(ptptr proc, int16 sig)
 {
     register ptptr p;
 
@@ -563,9 +574,7 @@ int16 sig;
 	
 }
 
-ssig(proc,sig)
-register ptptr proc;
-int16 sig;
+void ssig(register ptptr proc, int16 sig)
 {
     register stat;
 

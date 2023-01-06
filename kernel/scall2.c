@@ -2,10 +2,17 @@
 UZI (Unix Z80 Implementation) Kernel:  scall2.c
 ***************************************************/
 
+#include <string.h>
 
-/*LINTLIBRARY*/
-#include "unix.h"
-#include "extern.h"
+#include <unix.h>
+#include <extern.h>
+
+#include <devio.h>
+#include <extras.h>
+#include <filesys.h>
+#include <machdep.h>
+#include <process.h>
+#include <scall.h>
 
 
 /* Getpid() */
@@ -162,7 +169,7 @@ char *envp[];
 #define argv (char **)udata.u_argn1
 #define envp (char **)udata.u_argn
 
-_execve()
+int _execve(void)
 {
     register inoptr ino;
     register char *buf;
@@ -220,7 +227,7 @@ _execve()
 
     udata.u_ino = ino;     /* Termorarily stash these here */
 
-    tempstk();
+    tempstack();
     exec2();   /* Never returns */
 
 nogood2:
@@ -236,7 +243,7 @@ nogood:
 #undef envp
 
 
-exec2()
+void exec2(void)
 {
     register blkno_t blk;
     register char **argv;
@@ -292,9 +299,7 @@ exec2()
 }
 
 
-wargs(argv,blk)
-char **argv;
-int blk;
+int wargs(char **argv, int blk)
 {
     register char *ptr;    /* Address of base of arg strings in user space */
     register int n;
@@ -405,9 +410,9 @@ uint16 incr;
 
 _sbrk()
 {
-    register char *oldbrk;
+    register char *oldbrk = udata.u_break;
 
-    udata.u_argn += (oldbrk = udata.u_break);
+    udata.u_argn += (int) oldbrk;
     if (_brk())
 	return(-1);
 
@@ -504,9 +509,7 @@ __exit()
 
 
 
-doexit(val,val2)
-int16 val;
-int16 val2;
+void doexit(int16 val, int16 val2)
 {
     register int16 j;
     register ptptr p;

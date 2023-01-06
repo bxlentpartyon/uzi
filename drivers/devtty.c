@@ -125,7 +125,7 @@ queue, echoing and processing backspace and carriage return.  If the queue
 contains a full line, it wakes up anything waiting on it.  If it is totally
 full, it beeps at the user. */
 
-tty_int()
+int tty_int(void)
 {
     register char c;
     register found;
@@ -189,8 +189,7 @@ again:
 
 #ifdef vax
 
-_putc(c)
-char c;
+void _putc(char c)
 {
     write(1,&c,1);
 }

@@ -697,8 +697,7 @@ int uf_alloc(void)
 
 /* I_ref increases the reference count of the given inode table entry. */
 
-i_ref(ino)
-inoptr ino;
+void i_ref(inoptr ino)
 {
     if (++(ino->c_refs) == 2*ITABSIZE)  /* Arbitrary limit. */
 	panic("too many i-refs");
@@ -1025,9 +1024,7 @@ int getmode(inoptr ino)
 /* Fmount places the given device in the mount table with
 mount point ino */
 
-fmount(dev,ino)
-register int dev;
-register inoptr ino;
+int fmount(register int dev, register inoptr ino)
 {
     char *buf;
     register struct filesys *fp;

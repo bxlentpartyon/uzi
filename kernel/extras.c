@@ -39,9 +39,7 @@ BCHLDR: DS      2
 #endasm
 
 
-bzero(ptr,count)
-char *ptr;
-int count;
+void bzero(char *ptr, int count)
 {
     *ptr = 0;
     bcopy(ptr,ptr+1,count-1);
