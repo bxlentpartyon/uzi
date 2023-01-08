@@ -2,9 +2,11 @@
 UZI (Unix Z80 Implementation) Kernel:  devwd.c
 ***************************************************/
 
+#include <unix.h>
+#include <extern.h>
 
-#include "unix.h"
-#include "extern.h"
+#include <devwd.h>
+#include <machdep.h>
 
 #define LUN 1
 #define RDCMD 0x28
@@ -18,9 +20,7 @@ extern char *cptr;
 extern int busid;
 extern scsiop();
 
-wd_read(minor, rawflag)
-unsigned minor;
-int rawflag;
+int wd_read(unsigned minor, int rawflag)
 {
     cmdblk[0] = RDCMD;
     if (setup(minor, rawflag))
@@ -44,10 +44,7 @@ int rawflag;
 }
 
 
-static
-setup(minor, rawflag)
-unsigned minor;
-int rawflag;
+int setup(unsigned minor, int rawflag)
 {
     register blkno_t block;
 
@@ -92,11 +89,7 @@ int rawflag;
     return(0);
 }
 
-
-static
-chkstat(stat, rdflag)
-int stat;
-int rdflag;
+void chkstat(int stat, int rdflag)
 {
     if (stat)
     {
@@ -122,7 +115,7 @@ int busid;
 
 scsiop()
 {
-
+/*
 #asm 8080
 ;
 ;
@@ -325,6 +318,7 @@ WRADR:  DS      2
 WRLEN   EQU $ - WRBLK
 
 #endasm
+*/
         
 }
  

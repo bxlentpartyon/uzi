@@ -10,7 +10,7 @@ TARGET := uzi.nes
 LINKER_SCRIPT := uzi.cfg
 
 KERNEL_FILES 	:= scall1.o scall2.o dispatch.o machdep.o process.o
-DRIVER_FILES 	:= devio.o devwd.o devmisc.o devtty.o devflop.o
+DRIVER_FILES 	:= devio.o devmisc.o devtty.o #devwd.o devflop.o
 FS_FILES	:= filesys.o
 
 KERNEL_OBJECTS	:= $(patsubst %, kernel/%, $(KERNEL_FILES))
