@@ -3,8 +3,9 @@ UZI (Unix Z80 Implementation) Kernel:  extras.c
 ***************************************************/
 
 
-bcopy()
+void bcopy(void *src, void *dest, int count)
 {
+/*
 #asm 8080
 ; BCOPY(SRC,DEST,COUNT)
 ;
@@ -28,8 +29,10 @@ bcopy()
 .8080
         PCHL
 #endasm
+*/
 }
 
+/*
 #asm 
 ;
 HOLDER: DS      2
@@ -37,7 +40,7 @@ BCHLDR: DS      2
 ;
 ;
 #endasm
-
+*/
 
 /* TODO remove?
  * defined in cc65 string.h
@@ -49,11 +52,13 @@ void bzero(char *ptr, int count)
 */
 
 
-abort()
+void abort(void)
 {
+/*
 #asm 8080
         DI
         JMP     $
 #endasm
+*/
 }
 

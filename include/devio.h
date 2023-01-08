@@ -16,7 +16,11 @@ int d_ioctl(int dev, int request, char *data);
 int validdev(int dev);
 void bufdump(void);
 void bufinit(void);
-void swapread(int dev, blkno_t blkno, unsigned nbytes, char *buf);
-void swapwrite(int dev, blkno_t blkno, unsigned nbytes, char *buf);
+int swapread(int dev, blkno_t blkno, unsigned nbytes, char *buf);
+int swapwrite(int dev, blkno_t blkno, unsigned nbytes, char *buf);
+
+/* static to devio.h */
+int bdread(bufptr bp);
+int bdwrite(bufptr bp);
 
 #endif

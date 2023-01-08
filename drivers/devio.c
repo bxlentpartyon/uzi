@@ -6,8 +6,13 @@ UZI (Unix Z80 Implementation) Kernel:  devio.c
 int ok(), nogood();
 #define DEVIO
 
-#include "unix.h"
-#include "extern.h"
+#include <string.h>
+
+#include <unix.h>
+#include <extern.h>
+
+#include <devio.h>
+#include <machdep.h>
 
 /* Buffer pool management */
 
@@ -219,8 +224,7 @@ and are handed a device number.
 Udata.u_base, count, and offset have the rest of the data.
 ****************************************************/
 
-bdread(bp)
-bufptr bp;
+int bdread(bufptr bp)
 {
     ifnot (validdev(bp->bf_dev))
         panic("bdread: invalid dev");
@@ -229,8 +233,7 @@ bufptr bp;
     return ((*dev_tab[bp->bf_dev].dev_read)(dev_tab[bp->bf_dev].minor, 0));
 }
 
-bdwrite(bp)
-bufptr bp;
+int bdwrite(bufptr bp)
 {
    ifnot (validdev(bp->bf_dev))
         panic("bdwrite: invalid dev");
@@ -254,7 +257,7 @@ int cdwrite(int dev)
 }
 
 
-void swapread(int dev, blkno_t blkno, unsigned nbytes, char *buf)
+int swapread(int dev, blkno_t blkno, unsigned nbytes, char *buf)
 {
     swapbase = buf;
     swapcnt = nbytes;
@@ -263,7 +266,7 @@ void swapread(int dev, blkno_t blkno, unsigned nbytes, char *buf)
 }
 
 
-void swapwrite(int dev, blkno_t blkno, unsigned nbytes, char *buf)
+int swapwrite(int dev, blkno_t blkno, unsigned nbytes, char *buf)
 {
     swapbase = buf;
     swapcnt = nbytes;
@@ -344,9 +347,7 @@ Character queue management routines
 
 
 /* add something to the tail */
-insq(q,c)
-register struct s_queue *q;
-char c;
+int insq(register struct s_queue *q, char c)
 {
     di();
     if (q->q_count == q->q_size)

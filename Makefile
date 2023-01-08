@@ -9,7 +9,7 @@ PLATFORM := nes
 TARGET := uzi.nes
 LINKER_SCRIPT := uzi.cfg
 
-KERNEL_FILES 	:= scall1.o scall2.o dispatch.o machdep.o process.o
+KERNEL_FILES 	:= scall1.o scall2.o dispatch.o machdep.o process.o extras.o
 DRIVER_FILES 	:= devio.o devmisc.o devtty.o #devwd.o devflop.o
 FS_FILES	:= filesys.o
 

@@ -2,9 +2,17 @@
 UZI (Unix Z80 Implementation) Kernel:  filesys.c
 ***************************************************/
 
+#include <string.h>
 
-#include "unix.h"
-#include "extern.h"
+#include <unix.h>
+#include <extern.h>
+
+#include <devio.h>
+#include <extras.h>
+#include <filesys.h>
+#include <machdep.h>
+#include <process.h>
+#include <scall.h>
 
 
 char *bread();
@@ -358,9 +366,7 @@ char *path;
 /* Namecomp compares two strings to see if they are the same file name.
 It stops at 14 chars or a null or a slash. It returns 0 for difference. */
 
-namecomp(n1,n2)
-register char *n1;
-register char *n2;
+int namecomp(register char *n1, register char *n2)
 {
     register int n;
 
@@ -801,10 +807,7 @@ void f_trunc(register inoptr ino)
 
 
 /* Companion function to f_trunc(). */
-freeblk(dev, blk, level)
-int dev;
-blkno_t blk;
-int level;
+void freeblk(int dev, blkno_t blk, int level)
 {
     blkno_t *buf;
     int j;
@@ -929,9 +932,7 @@ int rwflg;
 /* Validblk panics if the given block number is not a valid data block
 for the given device. */
 
-validblk(dev, num)
-int dev;
-blkno_t num;
+void validblk(int dev, blkno_t num)
 {
     register fsptr devptr;
 
@@ -1050,8 +1051,7 @@ int fmount(register int dev, register inoptr ino)
 }
 
 
-magic(ino)
-inoptr ino;
+void magic(inoptr ino)
 {
     if (ino->c_magic != CMAGIC)
 	panic("Corrupt inode");

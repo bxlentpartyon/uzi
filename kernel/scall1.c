@@ -919,7 +919,7 @@ nogood3:
 sync()
 ***************************************/
 
-_sync()
+void _sync(void)
 {
     register j;
     register inoptr ino;

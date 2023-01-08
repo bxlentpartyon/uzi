@@ -5,6 +5,7 @@ void readi(register inoptr ino);
 void writei(register inoptr ino);
 int doclose(int16 uindex);
 int _execve(void);
+void _sync(void);
 
 /* stuff below is static to scall1.c and should be pulled out of the header */
 void updoff(void);

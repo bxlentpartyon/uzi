@@ -2,9 +2,12 @@
 UZI (Unix Z80 Implementation) Kernel:  devmisc.c
 ***************************************************/
 
+#include <unix.h>
+#include <extern.h>
 
-#include "unix.h"
-#include "extern.h"
+#include <devmisc.h>
+#include <extras.h>
+#include <machdep.h>
 
 mem_read(minor, rawflag)
 int minor;
@@ -70,8 +73,7 @@ int rawflag;
 }
 
 
-lpout(c)
-char c;
+void lpout(char c)
 {
     while(in(0x84)&02)
         ;
@@ -83,5 +85,5 @@ char c;
 }
 
 
-#include "devmt.c"
+//#include "devmt.c"
 
