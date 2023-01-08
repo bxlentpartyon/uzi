@@ -24,7 +24,7 @@ TARGET_DEPS := $(KERNEL_OBJECTS) $(DRIVER_OBJECTS) $(FS_OBJECTS)
 all: $(TARGET)
 
 clean:
-	rm -f *.o *.nes
+	rm -f */*.s */*.o *.nes
 
 %.o: %.c
 %.s: %.c
