@@ -39,11 +39,14 @@ BCHLDR: DS      2
 #endasm
 
 
+/* TODO remove?
+ * defined in cc65 string.h
 void bzero(char *ptr, int count)
 {
     *ptr = 0;
     bcopy(ptr,ptr+1,count-1);
 }
+*/
 
 
 abort()

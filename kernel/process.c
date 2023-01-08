@@ -2,6 +2,7 @@
 UZI (Unix Z80 Implementation) Kernel:  process.c
 ***************************************************/
 
+#include <string.h>
 
 #include <unix.h>
 #include <extern.h>
