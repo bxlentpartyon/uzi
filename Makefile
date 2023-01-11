@@ -12,12 +12,14 @@ LINKER_SCRIPT := uzi.cfg
 KERNEL_FILES 	:= scall1.o scall2.o dispatch.o machdep.o process.o extras.o
 DRIVER_FILES 	:= devio.o devmisc.o devtty.o #devwd.o devflop.o
 FS_FILES	:= filesys.o
+LIB_FILES	:= neschar.o
 
 KERNEL_OBJECTS	:= $(patsubst %, kernel/%, $(KERNEL_FILES))
 DRIVER_OBJECTS	:= $(patsubst %, drivers/%, $(DRIVER_FILES))
 FS_OBJECTS	:= $(patsubst %, fs/%, $(FS_FILES))
+LIB_OBJECTS	:= $(patsubst %, lib/%, $(LIB_FILES))
 
-TARGET_DEPS := $(KERNEL_OBJECTS) $(DRIVER_OBJECTS) $(FS_OBJECTS)
+TARGET_DEPS := $(KERNEL_OBJECTS) $(DRIVER_OBJECTS) $(FS_OBJECTS) $(LIB_OBJECTS)
 
 .PRECIOUS: %.s %.o
 .SUFFIXES:
@@ -30,6 +32,10 @@ clean:
 %.s: %.c
 	@echo "Building .c to .s $<"
 	$(CC) --target $(PLATFORM) -I$(CC65_DIR)/include/ -I$(PWD)/include/ -O $<
+
+%.o: %.S
+	@echo "Building .S $<"
+	$(CA) $<
 
 %.o: %.s
 	@echo "Building .s $<"
