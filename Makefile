@@ -20,17 +20,19 @@ FS_OBJECTS	:= $(patsubst %, fs/%, $(FS_FILES))
 TARGET_DEPS := $(KERNEL_OBJECTS) $(DRIVER_OBJECTS) $(FS_OBJECTS)
 
 .PRECIOUS: %.s %.o
+.SUFFIXES:
 
 all: $(TARGET)
 
 clean:
 	rm -f */*.s */*.o *.nes
 
-%.o: %.c
 %.s: %.c
+	@echo "Building .c to .s $<"
 	$(CC) --target $(PLATFORM) -I$(CC65_DIR)/include/ -I$(PWD)/include/ -O $<
 
 %.o: %.s
+	@echo "Building .s $<"
 	$(CA) $<
 
 $(TARGET): $(TARGET_DEPS) $(LINKER_SCRIPT)
