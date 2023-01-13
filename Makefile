@@ -4,7 +4,7 @@ LD := ld65
 
 CC65_DIR := $(UZIBUILD_ROOT)/cc65/
 
-PLATFORM := nes
+PLATFORM := uzi
 
 TARGET := uzi.nes
 LINKER_SCRIPT := uzi.cfg
@@ -19,7 +19,7 @@ DRIVER_OBJECTS	:= $(patsubst %, drivers/%, $(DRIVER_FILES))
 FS_OBJECTS	:= $(patsubst %, fs/%, $(FS_FILES))
 LIB_OBJECTS	:= $(patsubst %, lib/%, $(LIB_FILES))
 
-TARGET_DEPS := $(KERNEL_OBJECTS) $(DRIVER_OBJECTS) $(FS_OBJECTS) $(LIB_OBJECTS)
+TARGET_DEPS := $(KERNEL_OBJECTS) $(DRIVER_OBJECTS) $(FS_OBJECTS) $(LIB_OBJECTS) header.o
 
 .PRECIOUS: %.s %.o
 .SUFFIXES:
@@ -42,4 +42,4 @@ clean:
 	$(CA) $<
 
 $(TARGET): $(TARGET_DEPS) $(LINKER_SCRIPT)
-	$(LD) -m link.map -C $(LINKER_SCRIPT) -o $@ $(TARGET_DEPS) $(PLATFORM).lib
+	$(LD) -m link.map -C $(LINKER_SCRIPT) -o $@ header.o kernel/extras.o kernel/machdep.o uzi.lib
