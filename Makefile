@@ -27,7 +27,7 @@ TARGET_DEPS := $(KERNEL_OBJECTS) $(DRIVER_OBJECTS) $(FS_OBJECTS) $(LIB_OBJECTS) 
 all: $(TARGET)
 
 clean:
-	rm -f */*.s */*.o *.nes
+	rm -f */*.s */*.o *.o *.nes
 
 %.s: %.c
 	@echo "Building .c to .s $<"
