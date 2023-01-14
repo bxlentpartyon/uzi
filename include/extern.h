@@ -2,6 +2,10 @@
 UZI (Unix Z80 Implementation) Kernel:  extern.h
 ***************************************************/
 
+#ifndef __EXTERN_H__
+#define __EXTERN_H__
+
+#include <unix.h>
 
 /* These are the global data structures */
 
@@ -43,4 +47,4 @@ extern char vector[3];  /* Place for interrupt vector */
 #undef extern
 #endif
 
-
+#endif /* __EXTERN_H__ */

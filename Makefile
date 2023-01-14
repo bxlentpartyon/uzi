@@ -9,7 +9,7 @@ PLATFORM := uzi
 TARGET := uzi.nes
 LINKER_SCRIPT := uzi.cfg
 
-KERNEL_FILES 	:= scall1.o scall2.o dispatch.o machdep.o process.o extras.o
+KERNEL_FILES 	:= scall1.o scall2.o dispatch.o machdep.o process.o extras.o kdata.o
 DRIVER_FILES 	:= devio.o devmisc.o devtty.o #devwd.o devflop.o
 FS_FILES	:= filesys.o
 LIB_FILES	:= neschar.o
@@ -42,4 +42,4 @@ clean:
 	$(CA) $<
 
 $(TARGET): $(TARGET_DEPS) $(LINKER_SCRIPT)
-	$(LD) -m link.map -C $(LINKER_SCRIPT) -o $@ header.o kernel/extras.o kernel/machdep.o uzi.lib
+	$(LD) -m link.map -C $(LINKER_SCRIPT) -o $@ header.o kernel/extras.o kernel/machdep.o kernel/process.o kernel/kdata.o drivers/devtty.o drivers/devio.o uzi.lib

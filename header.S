@@ -1,5 +1,6 @@
+.export	__STARTUP__ : absolute = 1	; Mark as startup
 .import zerobss
-.import __STACKSTART__
+.import __STACK_START__
 
 .include "zeropage.inc"
 
@@ -29,8 +30,8 @@
 .segment "CODE"
 
 .proc reset
-	lda #<__STACKSTART__
-	ldx #>__STACKSTART__
+	lda #<__STACK_START__
+	ldx #>__STACK_START__
 	sta sp
 	stx sp+1
 	jsr zerobss

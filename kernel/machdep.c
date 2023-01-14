@@ -392,7 +392,7 @@ void kprintf(char *fmt, ...)
 	va_list ap;
         register char **arg;
         register c, base;
-        char s[7], *itob();
+        char s[7]; //, *itob();
 
 
 	va_start(ap, fmt);
@@ -422,7 +422,7 @@ void kprintf(char *fmt, ...)
                 case 'x':
                         base = 16;
                 prt:
-                        puts(itob(*--arg, s, base));
+                        //puts(itob(*--arg, s, base));
                         continue;
                 case 's':
                         puts(*--arg);
@@ -436,3 +436,13 @@ void kprintf(char *fmt, ...)
 	va_end(ap);
         }
 
+
+void out(char c, unsigned int *addr)
+{
+	return;
+}
+
+unsigned int in(unsigned int *addr)
+{
+	return 0;
+}
