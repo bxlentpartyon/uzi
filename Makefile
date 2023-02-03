@@ -42,4 +42,4 @@ clean:
 	$(CA) $<
 
 $(TARGET): $(TARGET_DEPS) $(LINKER_SCRIPT)
-	$(LD) -m link.map -C $(LINKER_SCRIPT) -o $@ header.o kernel/extras.o kernel/machdep.o kernel/process.o kernel/kdata.o drivers/devtty.o drivers/devio.o uzi.lib
+	$(LD) -m link.map -C $(LINKER_SCRIPT) -o $@ header.o $(KERNEL_OBJECTS) $(DRIVER_OBJECTS) $(FS_OBJECTS) $(LIB_OBJECTS) uzi.lib
