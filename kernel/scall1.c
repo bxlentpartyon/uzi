@@ -14,16 +14,12 @@ UZI (Unix Z80 Implementation) Kernel:  scall1.c
 #include <process.h>
 #include <scall.h>
 
-/*******************************************
-open(name, flag)
-char *name;
-register int16 flag;
-*********************************************/
-
+/*
 #define name (char *)udata.u_argn1
 #define flag (int16)udata.u_argn
+*/
 
-_open()
+_open(char *name, int16 flag)
 {
     int16 uindex;
     register int16 oftindex;
@@ -83,21 +79,9 @@ nooft:
     return (-1);
 }
 
-#undef name
-#undef flag
-
-
-
-/*********************************************
-close(uindex)
-int16 uindex;
-**********************************************/
-
-#define uindex (int16)udata.u_argn
-
-_close()
+_close(int uindex)
 {
-    return(doclose(uindex));
+    return doclose(uindex);
 }
 
 #undef uindex
