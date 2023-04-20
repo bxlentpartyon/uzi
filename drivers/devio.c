@@ -44,11 +44,7 @@ pointer to the data.  This is very important.
 
 unsigned bufclock = 0;  /* Time-stamp counter for LRU */
 
-char *
-bread( dev, blk, rewrite)
-int dev;
-blkno_t blk;
-int rewrite;
+char *bread(int dev, blkno_t blk, int rewrite)
 {
     register bufptr bp;
     bufptr bfind();
@@ -115,8 +111,7 @@ int bfree(register bufptr bp, int dirty)
 }
 
 
-char *
-zerobuf()
+char *zerobuf(void)
 {
     bufptr bp;
     bufptr freebuf();
@@ -140,10 +135,7 @@ void bufsync(void)
 }
 
 
-bufptr
-bfind(dev, blk)
-int dev;
-blkno_t blk;
+bufptr bfind(int dev, blkno_t blk)
 {
     register bufptr bp;
 
@@ -321,15 +313,12 @@ int d_ioctl(int dev, int request, char *data)
 }
 
 
-static 
-ok()
+int ok(void)
 {
     return(0);
 }
 
-
-static 
-nogood()
+int nogood(void)
 {
     return(-1);
 }
@@ -364,9 +353,7 @@ int insq(register struct s_queue *q, char c)
 }
 
 /* Remove something from the head. */
-remq(q,cp)
-register struct s_queue *q;
-char *cp;
+remq(struct s_queue *q, char *cp)
 {
     di();
     ifnot (q->q_count)
@@ -384,9 +371,7 @@ char *cp;
 
 
 /* Remove something from the tail; the most recently added char. */
-uninsq(q,cp)
-register struct s_queue *q;
-char *cp;
+uninsq(struct s_queue *q, char *cp)
 {
     di();
     ifnot (q->q_count)
@@ -404,8 +389,7 @@ char *cp;
 
 
 /* Returns true if the queue has more characters than its wakeup number */
-fullq(q)
-struct s_queue *q;
+fullq(struct s_queue *q)
 {
     di();
     if (q->q_count > q->q_wakeup)
