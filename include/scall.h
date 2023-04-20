@@ -1,5 +1,5 @@
-#ifndef __SYSCALL_H__
-#define __SYSCALL_H__
+#ifndef __SCALL_H__
+#define __SCALL_H__
 
 void readi(register inoptr ino);
 void writei(register inoptr ino);
@@ -19,4 +19,4 @@ int wargs(char **argv, int blk);
 void exec2(void);
 void doexit(int16 val, int16 val2);
 
-#endif /* __SYSCALL_H__ */
+#endif /* __SCALL_H__ */
