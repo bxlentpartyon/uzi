@@ -19,7 +19,6 @@ void init2(void)
     register char *j;
     static char bootchar;
     static char *arg[2] = { "init", NULL };
-    inoptr i_open(), n_open();
     ptptr ptab_alloc();
 
     bufinit();
