@@ -3,10 +3,10 @@ UZI (Unix Z80 Implementation) Kernel:  devtty.c
 ***************************************************/
 
 
-#include "unix.h"
-#include "machdep.h"
-#include "devio.h"
-#include "process.h"
+#include <unix.h>
+#include <machdep.h>
+#include <devio.h>
+#include <process.h>
 
 extern struct u_data udata;
 
