@@ -24,10 +24,7 @@ char *bread();
   and parent is not null, parent will be filled in with
   the parents inoptr. Otherwise, parent will be set to NULL. */
 
-inoptr
-n_open(name,parent)
-register char *name;
-register inoptr *parent;
+inoptr n_open(char *name, inoptr *parent)
 {
 
     register inoptr wd;  /* the directory we are currently searching. */
@@ -115,10 +112,7 @@ otherwise NULL. This depends on the fact that ba_read will return unallocated
 blocks as zero-filled, and a partially allocated block will be padded with
 zeroes.  */
 
-inoptr
-srch_dir(wd,compname)
-register inoptr wd;
-register char *compname;
+inoptr srch_dir(inoptr wd, char *compname)
 {
     register int curentry;
     register blkno_t curblock;
@@ -155,9 +149,7 @@ register char *compname;
 so it dereferences it, and references and returns a pointer
 to the root of the mounted filesystem. */
 
-inoptr
-srch_mt(ino)
-register inoptr ino;
+inoptr srch_mt(inoptr ino)
 {
     register int j;
     inoptr i_open();
@@ -178,10 +170,7 @@ and makes an entry in the inode table for them, or
 increases it reference count if it is already there.
 An inode # of zero means a newly allocated inode */
 
-inoptr
-i_open(dev,ino)
-register int dev;
-register unsigned ino;
+inoptr i_open(int dev, unsigned ino)
 {
 
     struct dinode *buf;
@@ -348,9 +337,7 @@ int ch_link(register inoptr wd, char *oldname, char *newname, inoptr nindex)
 /* Filename is given a path name, and returns a pointer
 to the final component of it. */
 
-char *
-filename(path)
-char *path;
+char *filename(char *path)
 {
     register char *ptr;
 
@@ -392,10 +379,7 @@ int namecomp(register char *n1, register char *n2)
    will have one reference, and 0 links to it.
    Better make sure there isn't already an entry with the same name. */
 
-inoptr
-newfile(pino, name)
-register inoptr pino;
-register char *name;
+inoptr newfile(inoptr pino, char *name)
 {
 
     register inoptr nindex;
@@ -434,9 +418,7 @@ nogood:
 Also time-stamp the superblock of dev, and mark it modified.
 Used when freeing and allocating blocks and inodes. */
 
-fsptr
-getdev(devno)
-register int devno;
+fsptr getdev(int devno)
 {
     register fsptr dev;
 
@@ -451,8 +433,7 @@ register int devno;
 
 /* Returns true if the magic number of a superblock is corrupt */
 
-baddev(dev)
-fsptr dev;
+baddev(fsptr dev)
 {
     return (dev->s_mounted != SMOUNTED);
 }
@@ -461,9 +442,7 @@ fsptr dev;
 /* I_alloc finds an unused inode number, and returns it,
 or 0 if there are no more inodes available. */
 
-unsigned
-i_alloc(devno)
-int devno;
+unsigned i_alloc(int devno)
 {
     fsptr dev;
     blkno_t blk;
@@ -532,9 +511,7 @@ and frees the inode.  It is assumed that there
 are no references to the inode in the inode table or
 in the filesystem. */
 
-i_free(devno, ino)
-register int devno;
-register unsigned ino;
+i_free(int devno, unsigned ino)
 {
     register fsptr dev;
 
@@ -553,9 +530,7 @@ register unsigned ino;
 /* Blk_alloc is given a device number, and allocates an unused block
 from it. A returned block number of zero means no more blocks. */
 
-blkno_t
-blk_alloc(devno)
-register int devno;
+blkno_t blk_alloc(int devno)
 {
 
     register fsptr dev;
@@ -616,9 +591,7 @@ corrupt2:
 /* Blk_free is given a device number and a block number,
 and frees the block. */
 
-blk_free(devno,blk)
-register int devno;
-register blkno_t blk;
+blk_free(int devno, blkno_t blk)
 {
     register fsptr dev;
     register char *buf;
@@ -771,8 +744,7 @@ int isdevice(inoptr ino)
 
 
 /* This returns the device number of an inode representing a device */
-devnum(ino)
-inoptr ino;
+devnum(inoptr ino)
 {
     return (*(ino->c_node.i_addr));
 }
@@ -836,11 +808,7 @@ void freeblk(int dev, blkno_t blk, int level)
  * inode and the logical block number in a file.
  * The block is zeroed if created.
  */
-blkno_t
-bmap(ip, bn, rwflg)
-inoptr ip;
-register blkno_t bn;
-int rwflg;
+blkno_t bmap(inoptr ip, blkno_t bn, int rwflg)
 {
 	register int i;
 	register bufptr bp;
@@ -950,9 +918,7 @@ void validblk(int dev, blkno_t num)
 /* This returns the inode pointer associated with a user's
 file descriptor, checking for valid data structures */
 
-inoptr
-getinode(uindex)
-register int uindex;
+inoptr getinode(int uindex)
 {
     register int oftindex;
     register inoptr inoindex;
