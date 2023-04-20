@@ -175,7 +175,6 @@ int _execve(void)
     register char *buf;
     inoptr n_open();
     char *bread();
-    blkno_t bmap();
 
     ifnot (ino = n_open(name,NULLINOPTR))
 	return(-1);
@@ -254,7 +253,6 @@ void exec2(void)
     register char *progptr;
     char *buf;
     blkno_t pblk;
-    blkno_t bmap();
     char *bread();
 
     /* Read in the rest of the program */
