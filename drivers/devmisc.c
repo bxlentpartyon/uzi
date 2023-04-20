@@ -9,18 +9,14 @@ UZI (Unix Z80 Implementation) Kernel:  devmisc.c
 #include <extras.h>
 #include <machdep.h>
 
-mem_read(minor, rawflag)
-int minor;
-int rawflag;
+unsigned int mem_read(int minor, int rawflag)
 {
     bcopy((char *)(512*udata.u_offset.o_blkno+udata.u_offset.o_offset),
                  udata.u_base, udata.u_count);
     return(udata.u_count);
 }
 
-mem_write(minor, rawflag)
-int minor;
-int rawflag;
+unsigned int mem_write(int minor, int rawflag)
 {
     bcopy(udata.u_base,
         (char *)(512*udata.u_offset.o_blkno+udata.u_offset.o_offset),
@@ -30,9 +26,7 @@ int rawflag;
 
 
 
-null_write(minor, rawflag)
-int minor;
-int rawflag;
+unsigned int null_write(int minor, int rawflag)
 {
     return(udata.u_count);
 }
@@ -41,13 +35,13 @@ int rawflag;
 
 static char lop = 0;
 
-lpr_open()
+int lpr_open(void)
 {
     lop = 1;
     return(0);
 }
 
-lpr_close()
+int lpr_close(void)
 {
     if (lop)
     {
@@ -60,9 +54,7 @@ lpr_close()
 
 
 
-lpr_write(minor, rawflag)
-int minor;
-int rawflag;
+unsigned int lpr_write(int minor, int rawflag)
 {
     unsigned n;
 

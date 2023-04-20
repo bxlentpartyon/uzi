@@ -60,9 +60,7 @@ int tty_read(int16 minor, int16 rawflag)
 
 
 
-tty_write(minor, rawflag)
-int16 minor;
-int16 rawflag;
+int tty_write(int16 minor, int16 rawflag)
 {
     int towrite;
 
@@ -97,22 +95,19 @@ int16 rawflag;
 
 
 
-tty_open(minor)
-int minor;
+int tty_open(int minor)
 {
     return(0);
 }
 
 
-tty_close(minor)
-int minor;
+int tty_close(int minor)
 {
     return(0);
 }
 
 
-tty_ioctl(minor)
-int minor;
+int tty_ioctl(int minor)
 {
     return(-1);
 }
