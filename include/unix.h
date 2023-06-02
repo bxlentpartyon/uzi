@@ -94,7 +94,7 @@ typedef uint16 blkno_t;  /* Can have 65536 512-byte blocks in filesystem */
 
 
 typedef struct blkbuf {
-    char        bf_data[512];    /* This MUST be first ! */
+    char        bf_data[64];    /* This MUST be first ! */
     char        bf_dev;
     blkno_t     bf_blk;
     char        bf_dirty;
@@ -325,11 +325,11 @@ struct s_argblk {
 
 struct devsw {
     int minor;          /* The minor device number (an argument to below) */
-    int (*dev_open)();  /* The routines for reading, etc */
-    int (*dev_close)(); /* format: op(minor,blkno,offset,count,buf); */
-    int (*dev_read)();  /* offset would be ignored for block devices */
-    int (*dev_write)(); /* blkno and offset ignored for tty, etc. */
-    int (*dev_ioctl)(); /* count is rounded to 512 for block devices */
+    int (*dev_open)(int minor);  /* The routines for reading, etc */
+    int (*dev_close)(int minor); /* format: op(minor,blkno,offset,count,buf); */
+    int (*dev_read)(int16 minor, int16 rawflag);  /* offset would be ignored for block devices */
+    int (*dev_write)(int16 minor, int16 rawflag); /* blkno and offset ignored for tty, etc. */
+    int (*dev_ioctl)(int dev, int request, char *data); /* count is rounded to 512 for block devices */
 };
 
 

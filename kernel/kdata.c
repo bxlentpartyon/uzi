@@ -3,11 +3,18 @@
 
 #include <devio.h>
 
+struct devsw dev_tab[] =  /* The device driver switch table */
+{
+    { 0, tty_open, tty_close, tty_read, tty_write, ok },      /* tty */
+    { 0, ok, ok, ok, null_write, nogood },                      /* /dev/null */
+    { 0, ok, ok, mem_read, mem_write, nogood }              /* /dev/mem */
+};
+
 /* Process/userspace stuff */
 
 struct u_data udata;
 ptptr initproc; /* The process table address of the first process. */
-struct p_tab ptab[PTABSIZE];
+struct p_tab ptab[1];
 
 /* Interrupt/timer stuff */
 
@@ -22,20 +29,20 @@ int16 sec;	/* Tick counter for counting off one second */
 
 inoptr root;   /* Address of root dir in inode table */
 int16 ROOTDEV;
-struct cinode i_tab[ITABSIZE];    /* In-core inode table */
-struct oft of_tab[OFTSIZE];
-struct filesys fs_tab[NDEVS];
+struct cinode i_tab[1];    /* In-core inode table */
+struct oft of_tab[1];
+struct filesys fs_tab[1];
 
 /* Driver stuff */
 
 unsigned swapcnt;
 char *swapbase;
 blkno_t swapblk;
-struct blkbuf bufpool[NBUFS];
+struct blkbuf bufpool[1];
 
-struct devsw dev_tab[] =  /* The device driver switch table */
-{
-    { 0, tty_open, tty_close, tty_read, tty_write, ok },      /* tty */
-    { 0, ok, ok, ok, null_write, nogood },                      /* /dev/null */
-    { 0, ok, ok, mem_read, mem_write, nogood }              /* /dev/mem */
-};
+//struct devsw dev_tab[] =  /* The device driver switch table */
+//{
+//    { 0, 0, 0, 0, 0, 0 },      /* tty */
+//    { 0, ok, ok, ok, null_write, nogood },                      /* /dev/null */
+//    { 0, ok, ok, mem_read, mem_write, nogood }              /* /dev/mem */
+//};

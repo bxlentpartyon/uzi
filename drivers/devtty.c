@@ -97,6 +97,8 @@ int tty_write(int16 minor, int16 rawflag)
 
 int tty_open(int minor)
 {
+	if (minor == 0)
+		return minor;
     return(0);
 }
 

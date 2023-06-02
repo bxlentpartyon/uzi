@@ -15,17 +15,17 @@ UZI (Unix Z80 Implementation) Kernel:  extern.h
 
 
 extern struct u_data udata; /* MUST BE FIRST */
-extern struct p_tab ptab[PTABSIZE];
+extern struct p_tab ptab[1];
 
 extern inoptr root;   /* Address of root dir in inode table */
 extern int16 ROOTDEV;  /* Device number of root filesystem. */
 
-extern struct cinode i_tab[ITABSIZE];    /* In-core inode table */
-extern struct oft of_tab[OFTSIZE]; /* Open File Table */
+extern struct cinode i_tab[1];    /* In-core inode table */
+extern struct oft of_tab[1]; /* Open File Table */
 
-extern struct filesys fs_tab[NDEVS];  /* Table entry for each
+extern struct filesys fs_tab[1];  /* Table entry for each
                                         device with a filesystem. */
-extern struct blkbuf bufpool[NBUFS];
+extern struct blkbuf bufpool[1];
 
 extern ptptr initproc; /* The process table address of the first process. */
 extern int16 inint;   /* flag is set whenever interrupts are being serviced */
