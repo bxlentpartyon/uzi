@@ -3,3 +3,4 @@ cscope.out
 *.o
 *.s
 link.map
+tileset.chr
